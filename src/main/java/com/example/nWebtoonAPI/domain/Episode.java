@@ -33,9 +33,11 @@ public class Episode {
 	@Column(nullable = false)
 	@CreationTimestamp
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private Date updatedAt;
+	private Date uploadedAt;
 
 	private double grade;
+
+	private String thumbName;
 
 	private String thumbUrl;
 
