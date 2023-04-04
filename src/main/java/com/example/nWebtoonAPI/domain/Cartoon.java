@@ -36,7 +36,11 @@ public class Cartoon {
 	@Column(nullable = false)
 	private String day;
 
+	private String thumbName1;
+
 	private String thumbUrl1;
+
+	private String thumbName2;
 
 	private String thumbUrl2;
 
