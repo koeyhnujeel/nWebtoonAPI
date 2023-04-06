@@ -36,13 +36,13 @@ public class Cartoon {
 	@Column(nullable = false)
 	private String day;
 
-	private String thumbName1;
+	private String mainImgName;
 
-	private String thumbUrl1;
+	private String mainImgUrl;
 
-	private String thumbName2;
+	private String subImgName;
 
-	private String thumbUrl2;
+	private String subImgUrl;
 
 	private double grade;
 
