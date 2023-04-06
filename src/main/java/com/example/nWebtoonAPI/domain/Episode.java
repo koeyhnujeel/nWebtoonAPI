@@ -37,9 +37,9 @@ public class Episode {
 
 	private double grade;
 
-	private String thumbName;
+	private String mainImgName;
 
-	private String thumbUrl;
+	private String mainImgUrl;
 
 	private String contentUrl;
 
