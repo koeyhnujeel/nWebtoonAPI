@@ -2,8 +2,12 @@ package com.example.nWebtoonAPI.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -13,6 +17,7 @@ import com.example.nWebtoonAPI.constant.ImgDir;
 import com.example.nWebtoonAPI.domain.Cartoon;
 import com.example.nWebtoonAPI.dto.CartoonDto;
 import com.example.nWebtoonAPI.dto.CartoonImgDto;
+import com.example.nWebtoonAPI.dto.CartoonListDto;
 import com.example.nWebtoonAPI.repository.CartoonRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -73,5 +78,21 @@ public class CartoonServiceImpl implements CartoonService {
 		BeanUtils.copyProperties(savedCartoon, cartoonImgDto);
 
 		return cartoonImgDto;
+	}
+
+	@Override
+	public List<CartoonListDto> getCartoons() {
+		List<Cartoon> cartoons = cartoonRepository.findAll();
+		if (cartoons.isEmpty()) {
+			throw new EntityNotFoundException("등록된 웹툰이 없습니다");
+		}
+
+		List<CartoonListDto> cartoonListDtos = new ArrayList<>();
+		for (Cartoon cartoon : cartoons) {
+			CartoonListDto cartoonListDto = new CartoonListDto();
+			BeanUtils.copyProperties(cartoon, cartoonListDto);
+			cartoonListDtos.add(cartoonListDto);
+		}
+		return cartoonListDtos;
 	}
 }

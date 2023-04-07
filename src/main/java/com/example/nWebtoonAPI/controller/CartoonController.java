@@ -1,6 +1,7 @@
 package com.example.nWebtoonAPI.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.nWebtoonAPI.dto.CartoonDto;
 import com.example.nWebtoonAPI.dto.CartoonImgDto;
+import com.example.nWebtoonAPI.dto.CartoonListDto;
 import com.example.nWebtoonAPI.service.CartoonService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,7 @@ public class CartoonController {
 	@PostMapping("")
 	public ResponseEntity<CartoonDto> createCartoon(@RequestBody CartoonDto cartoonDto) {
 		CartoonDto savedCartoon = cartoonService.createCartoon(cartoonDto);
-		return new ResponseEntity<CartoonDto>(savedCartoon, HttpStatus.OK);
+		return new ResponseEntity<>(savedCartoon, HttpStatus.OK);
 	}
 
 	@PostMapping("/{cartoonId}/image")
@@ -38,6 +40,12 @@ public class CartoonController {
 		MultipartFile subImg) throws IOException {
 
 		CartoonImgDto cartoonImgDto = cartoonService.createCartoonImg(cartoonId, mainImg, subImg);
-		return new ResponseEntity<CartoonImgDto>(cartoonImgDto, HttpStatus.OK);
+		return new ResponseEntity<>(cartoonImgDto, HttpStatus.OK);
+	}
+
+	@GetMapping("/list")
+	public ResponseEntity<List<CartoonListDto>> getCartoons() {
+		List<CartoonListDto> cartoonListDto = cartoonService.getCartoons();
+		return new ResponseEntity<>(cartoonListDto, HttpStatus.OK);
 	}
 }
