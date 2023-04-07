@@ -13,13 +13,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "episode", schema = "nWebtoon")
 @NoArgsConstructor
+@Getter @Setter
 public class Episode {
 
 	@Id
@@ -45,5 +50,6 @@ public class Episode {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cartoon_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Cartoon cartoon;
 }
