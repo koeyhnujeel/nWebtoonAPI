@@ -26,16 +26,16 @@ public class EpisodeController {
 	private final EpisodeService episodeService;
 
 	@PostMapping("/{cartoonId}/episode")
-	public ResponseEntity<EpisodeDto> createEpisode(@PathVariable Long cartoonId, @RequestPart EpisodeDto episodeDto, @RequestPart
-	MultipartFile thumbImg, @RequestPart MultipartFile contentImg) throws IOException {
+	public ResponseEntity<EpisodeDto> createEpisode(@PathVariable Long cartoonId, @RequestPart EpisodeDto episodeDto,
+		@RequestPart MultipartFile thumbImg, @RequestPart MultipartFile contentImg) throws IOException {
 
 		EpisodeDto episode = episodeService.createEpisode(cartoonId, episodeDto, thumbImg, contentImg);
-
 		return new ResponseEntity<>(episode, HttpStatus.OK);
 	}
 
 	@GetMapping("/{cartoonId}/episode/{episodeId}")
 	public ResponseEntity<EpisodeContentDto> getEpisode(@PathVariable Long cartoonId, @PathVariable Long episodeId) {
+
 		EpisodeContentDto episodeContentDto = episodeService.getEpisode(cartoonId, episodeId);
 		return new ResponseEntity<>(episodeContentDto, HttpStatus.OK);
 	}
