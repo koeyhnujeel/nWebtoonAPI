@@ -130,6 +130,16 @@ public class CartoonServiceImpl implements CartoonService {
 		return cartoonEditDto;
 	}
 
+	@Override
+	public void deleteCartoon(Long cartoonId) {
+		Optional<Cartoon> res = cartoonRepository.findById(cartoonId);
+		if (res.isEmpty()) {
+			throw new IllegalArgumentException("존재하지 않는 웹툰입니다.");
+		}
+		
+		cartoonRepository.deleteById(cartoonId);
+	}
+
 	public static String saveImgFile(MultipartFile img, String filePath) throws IOException {
 
 		String fileName = img.getOriginalFilename();

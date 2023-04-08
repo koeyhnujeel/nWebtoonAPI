@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,10 +54,21 @@ public class CartoonController {
 	}
 
 	@PutMapping("/{cartoonId}")
-	public ResponseEntity<CartoonEditDto> updateCartoon(@PathVariable Long cartoonId, @RequestPart CartoonEditDto cartoonEditDto,
-		@RequestPart(required = false) MultipartFile mainImg, @RequestPart(required = false) MultipartFile subImg) throws IOException {
+	public ResponseEntity<CartoonEditDto> updateCartoon(@PathVariable Long cartoonId,
+		@RequestPart CartoonEditDto cartoonEditDto,
+		@RequestPart(required = false) MultipartFile mainImg,
+		@RequestPart(required = false) MultipartFile subImg) throws IOException {
 
 		CartoonEditDto cartoonEdit = cartoonService.updateCartoon(cartoonId, cartoonEditDto, mainImg, subImg);
 		return new ResponseEntity<>(cartoonEdit, HttpStatus.OK);
+	}
+
+	/*
+	* 폴더 삭제 추가 해야함
+	* */
+	@DeleteMapping("/{cartoonId}")
+	public ResponseEntity<Void> deleteCartoon(@PathVariable Long cartoonId) {
+		cartoonService.deleteCartoon(cartoonId);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
