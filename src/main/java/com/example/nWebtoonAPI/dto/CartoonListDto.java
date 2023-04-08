@@ -12,4 +12,5 @@ public class CartoonListDto {
 	private double grade;
 	private String mainImgName;
 	private String mainImgUrl;
+	private int views;
 }

@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.nWebtoonAPI.constant.ImgDir;
 import com.example.nWebtoonAPI.domain.Cartoon;
 import com.example.nWebtoonAPI.domain.Episode;
+import com.example.nWebtoonAPI.dto.EpisodeContentDto;
 import com.example.nWebtoonAPI.dto.EpisodeDto;
 import com.example.nWebtoonAPI.repository.CartoonRepository;
 import com.example.nWebtoonAPI.repository.EpisodeRepository;
@@ -58,9 +59,30 @@ public class EpisodeServiceImpl implements EpisodeService {
 		Episode resEpisode = episodeRepository.save(savedEpisode);
 		BeanUtils.copyProperties(resEpisode, episodeDto);
 
+		Cartoon cartoon = res.get();
+		cartoon.setTotalEpisode(cartoon.getTotalEpisode() + 1);
+		cartoonRepository.save(cartoon);
+
 		return episodeDto;
 	}
 
+	@Override
+	public EpisodeContentDto getEpisode(Long cartoonId, Long episodeId) {
+		Optional<Episode> res = episodeRepository.findById(episodeId);
+		if (res.isEmpty()) {
+			throw new IllegalArgumentException("존재하지 않는 회차입니다.");
+		}
+		Optional<Cartoon> resCartoon = cartoonRepository.findById(cartoonId);
+		Cartoon cartoon = resCartoon.get();
+		cartoon.setViews(cartoon.getViews() + 1);
+		cartoonRepository.save(cartoon);
+
+		EpisodeContentDto episodeContentDto = new EpisodeContentDto();
+		Episode episode = res.get();
+		BeanUtils.copyProperties(episode, episodeContentDto);
+
+		return episodeContentDto;
+	}
 
 	private static void createFolder(String dirPath) {
 		File Folder = new File(dirPath);
