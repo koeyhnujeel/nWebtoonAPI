@@ -140,7 +140,7 @@ public class CartoonServiceImpl implements CartoonService {
 		cartoonRepository.deleteById(cartoonId);
 	}
 
-	public static String saveImgFile(MultipartFile img, String filePath) throws IOException {
+	private static String saveImgFile(MultipartFile img, String filePath) throws IOException {
 
 		String fileName = img.getOriginalFilename();
 		UUID uuid = UUID.randomUUID();

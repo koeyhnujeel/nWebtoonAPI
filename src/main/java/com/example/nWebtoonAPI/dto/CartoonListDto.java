@@ -9,7 +9,7 @@ public class CartoonListDto {
 	private Long cartoonId;
 	private String title;
 	private String author;
-	private int grade;
+	private double grade;
 	private String mainImgName;
 	private String mainImgUrl;
 }

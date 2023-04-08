@@ -1,9 +1,11 @@
 package com.example.nWebtoonAPI.domain;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,9 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Getter;
@@ -24,7 +27,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "episode", schema = "nWebtoon")
 @NoArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
+@EntityListeners(AuditingEntityListener.class)
 public class Episode {
 
 	@Id
@@ -36,9 +41,9 @@ public class Episode {
 	private String title;
 
 	@Column(nullable = false)
-	@CreationTimestamp
+	@CreatedDate
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private Date uploadedAt;
+	private LocalDate uploadedAt;
 
 	private double grade;
 
@@ -49,6 +54,8 @@ public class Episode {
 	private String contentImgName;
 
 	private String contentImgUrl;
+
+	private long count;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cartoon_id")
