@@ -136,7 +136,7 @@ public class CartoonServiceImpl implements CartoonService {
 		if (res.isEmpty()) {
 			throw new IllegalArgumentException("존재하지 않는 웹툰입니다.");
 		}
-		
+
 		cartoonRepository.deleteById(cartoonId);
 	}
 
