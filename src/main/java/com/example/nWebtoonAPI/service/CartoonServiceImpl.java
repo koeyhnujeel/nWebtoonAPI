@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.nWebtoonAPI.constant.ImgDir;
 import com.example.nWebtoonAPI.domain.Cartoon;
 import com.example.nWebtoonAPI.dto.CartoonDto;
+import com.example.nWebtoonAPI.dto.CartoonEditDto;
 import com.example.nWebtoonAPI.dto.CartoonImgDto;
 import com.example.nWebtoonAPI.dto.CartoonListDto;
 import com.example.nWebtoonAPI.repository.CartoonRepository;
@@ -54,18 +55,11 @@ public class CartoonServiceImpl implements CartoonService {
 			throw new IllegalArgumentException("파일이 존재하지 않습니다.");
 		}
 
-		String mainFileName = mainImg.getOriginalFilename();
 		String mainFilePath = ImgDir.imgPath + cartoonId + "/" + "main/";
+		String resMainFileName = saveImgFile(mainImg, mainFilePath);
 
-		String subFileName = subImg.getOriginalFilename();
 		String subFilePath = ImgDir.imgPath + cartoonId + "/" + "sub/";
-
-		UUID uuid = UUID.randomUUID();
-		String resMainFileName = uuid + "_" + mainFileName;
-		String resSubFileName = uuid + "_" + subFileName;
-
-		mainImg.transferTo(new File(mainFilePath + resMainFileName));
-		subImg.transferTo(new File(subFilePath + resSubFileName));
+		String resSubFileName = saveImgFile(subImg, subFilePath);
 
 		Cartoon cartoon = res.get();
 		cartoon.setMainImgName(resMainFileName);
@@ -94,5 +88,55 @@ public class CartoonServiceImpl implements CartoonService {
 			cartoonListDtos.add(cartoonListDto);
 		}
 		return cartoonListDtos;
+	}
+
+	@Override
+	public CartoonEditDto updateCartoon(Long cartoonId, CartoonEditDto cartoonEditDto, MultipartFile mainImg,
+		MultipartFile subImg) throws IOException {
+
+		Optional<Cartoon> res = cartoonRepository.findById(cartoonId);
+		if (res.isEmpty()) {
+			throw new IllegalArgumentException("존재하지 않는 웹툰입니다.");
+		}
+		Cartoon updateCartoon = res.get();
+		updateCartoon.setTitle(cartoonEditDto.getTitle());
+		updateCartoon.setAuthor(cartoonEditDto.getAuthor());
+		updateCartoon.setDay(cartoonEditDto.getDay());
+
+		if (mainImg != null) {
+			File file = new File(updateCartoon.getMainImgUrl());
+			file.delete();
+
+			String mainFilePath = ImgDir.imgPath + cartoonId + "/" + "main/";
+			String resMainFileName = saveImgFile(mainImg, mainFilePath);
+
+			updateCartoon.setMainImgName(resMainFileName);
+			updateCartoon.setMainImgUrl(mainFilePath + resMainFileName);
+		}
+
+		if (subImg != null) {
+			File file = new File(updateCartoon.getSubImgUrl());
+			file.delete();
+
+			String subFilePath = ImgDir.imgPath + cartoonId + "/" + "sub/";
+			String resSubFileName = saveImgFile(subImg, subFilePath);
+
+			updateCartoon.setSubImgName(resSubFileName);
+			updateCartoon.setSubImgUrl(subFilePath + resSubFileName);
+		}
+
+		Cartoon savedCartoon = cartoonRepository.save(updateCartoon);
+		BeanUtils.copyProperties(savedCartoon, cartoonEditDto);
+		return cartoonEditDto;
+	}
+
+	public static String saveImgFile(MultipartFile img, String filePath) throws IOException {
+
+		String fileName = img.getOriginalFilename();
+		UUID uuid = UUID.randomUUID();
+		String resFileName = uuid + "_" + fileName;
+		img.transferTo(new File(filePath + resFileName));
+
+		return resFileName;
 	}
 }
