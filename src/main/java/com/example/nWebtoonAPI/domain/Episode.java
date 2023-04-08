@@ -42,11 +42,13 @@ public class Episode {
 
 	private double grade;
 
-	private String mainImgName;
+	private String thumbImgName;
 
-	private String mainImgUrl;
+	private String thumbImgUrl;
 
-	private String contentUrl;
+	private String contentImgName;
+
+	private String contentImgUrl;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cartoon_id")
