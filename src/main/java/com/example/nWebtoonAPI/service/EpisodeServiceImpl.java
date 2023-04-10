@@ -125,7 +125,7 @@ public class EpisodeServiceImpl implements EpisodeService {
 	}
 
 	@Override
-	public void deleteEpisode(Long cartoonId, Long episodeId) throws IOException{
+	public void deleteEpisode(Long cartoonId, Long episodeId) throws IOException {
 		Optional<Episode> res = episodeRepository.findById(episodeId);
 		if (res.isEmpty()) {
 			throw new IllegalArgumentException("존재하지 않는 회차입니다.");

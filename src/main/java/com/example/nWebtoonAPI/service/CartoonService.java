@@ -16,5 +16,5 @@ public interface CartoonService {
 	CartoonImgDto createCartoonImg(Long cartoonId, MultipartFile mainImg, MultipartFile subImg) throws IOException;
 	List<CartoonListDto> getCartoons();
 	CartoonEditDto updateCartoon(Long cartoonId, CartoonEditDto cartoonEditDto, MultipartFile mainImg, MultipartFile subImg) throws IOException;
-	void deleteCartoon(Long cartoonId);
+	void deleteCartoon(Long cartoonId) throws IOException;
 }

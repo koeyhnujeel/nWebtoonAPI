@@ -67,7 +67,7 @@ public class CartoonController {
 	 * 폴더 삭제 추가 해야함
 	 * */
 	@DeleteMapping("/{cartoonId}")
-	public ResponseEntity<Void> deleteCartoon(@PathVariable Long cartoonId) {
+	public ResponseEntity<Void> deleteCartoon(@PathVariable Long cartoonId) throws IOException{
 		cartoonService.deleteCartoon(cartoonId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

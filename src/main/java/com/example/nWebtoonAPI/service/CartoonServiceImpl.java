@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -131,12 +132,19 @@ public class CartoonServiceImpl implements CartoonService {
 	}
 
 	@Override
-	public void deleteCartoon(Long cartoonId) {
+	public void deleteCartoon(Long cartoonId) throws IOException {
+
 		Optional<Cartoon> res = cartoonRepository.findById(cartoonId);
 		if (res.isEmpty()) {
 			throw new IllegalArgumentException("존재하지 않는 웹툰입니다.");
 		}
 
+		String path = ImgDir.imgPath + cartoonId;
+		File folder = new File(path);
+		if (folder.exists()) {
+			FileUtils.cleanDirectory(folder);
+			folder.delete();
+		}
 		cartoonRepository.deleteById(cartoonId);
 	}
 
