@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.nWebtoonAPI.dto.EpisodeContentDto;
 import com.example.nWebtoonAPI.dto.EpisodeDto;
 import com.example.nWebtoonAPI.dto.EpisodeEditDto;
+import com.example.nWebtoonAPI.dto.EpisodeGradeDto;
 import com.example.nWebtoonAPI.service.EpisodeService;
 
 import lombok.RequiredArgsConstructor;
@@ -55,8 +57,18 @@ public class EpisodeController {
 	}
 
 	@DeleteMapping("/{cartoonId}/episodes/{episodeId}")
-	public ResponseEntity<Void> deleteEpisode(@PathVariable Long cartoonId, @PathVariable Long episodeId) throws IOException{
+	public ResponseEntity<Void> deleteEpisode(@PathVariable Long cartoonId, @PathVariable Long episodeId) throws
+		IOException {
+
 		episodeService.deleteEpisode(cartoonId, episodeId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping("/{cartoonId}/episodes/{episodeId}/grade")
+	public ResponseEntity<EpisodeGradeDto> giveGrade(@PathVariable("episodeId") Long episodeId,
+		@RequestBody EpisodeGradeDto episodeGradeDto) {
+
+		EpisodeGradeDto episodeGrade = episodeService.giveGrade(episodeId, episodeGradeDto);
+		return new ResponseEntity<>(episodeGrade, HttpStatus.OK);
 	}
 }

@@ -16,6 +16,7 @@ import com.example.nWebtoonAPI.domain.Episode;
 import com.example.nWebtoonAPI.dto.EpisodeContentDto;
 import com.example.nWebtoonAPI.dto.EpisodeDto;
 import com.example.nWebtoonAPI.dto.EpisodeEditDto;
+import com.example.nWebtoonAPI.dto.EpisodeGradeDto;
 import com.example.nWebtoonAPI.repository.CartoonRepository;
 import com.example.nWebtoonAPI.repository.EpisodeRepository;
 
@@ -40,6 +41,7 @@ public class EpisodeServiceImpl implements EpisodeService {
 		Episode episode = new Episode();
 		episode.setTitle(episodeDto.getTitle());
 		episode.setGrade(0);
+		episode.setTotalGrade(0);
 		episode.setCount(0);
 		episode.setCartoon(res.get());
 		Episode savedEpisode = episodeRepository.save(episode);
@@ -143,6 +145,29 @@ public class EpisodeServiceImpl implements EpisodeService {
 		Cartoon cartoon = resCartoon.get();
 		cartoon.setTotalEpisode(cartoon.getTotalEpisode() - 1);
 		cartoonRepository.save(cartoon);
+	}
+
+	@Override
+	public EpisodeGradeDto giveGrade(Long episodeId, EpisodeGradeDto episodeGradeDto) {
+		Optional<Episode> res = episodeRepository.findById(episodeId);
+		if (res.isEmpty()) {
+			throw new IllegalArgumentException("존재하지 않는 회차입니다,");
+		}
+
+		Episode episode = res.get();
+		long count = episode.getCount();
+		++count;
+		double totalGrade = episode.getTotalGrade() + episodeGradeDto.getGrade();
+		double avgGrade = (totalGrade) / count;
+		double resAvgGrade = Math.round(avgGrade * 100) / 100.0;
+
+		episode.setGrade(resAvgGrade);
+		episode.setTotalGrade(totalGrade);
+		episode.setCount(count);
+		Episode savedEpisode = episodeRepository.save(episode);
+		BeanUtils.copyProperties(savedEpisode, episodeGradeDto);
+
+		return episodeGradeDto;
 	}
 
 	private static void createFolder(String dirPath) {

@@ -46,6 +46,8 @@ public class Episode {
 
 	private double grade;
 
+	private double totalGrade;
+
 	private String thumbImgName;
 
 	private String thumbImgUrl;
