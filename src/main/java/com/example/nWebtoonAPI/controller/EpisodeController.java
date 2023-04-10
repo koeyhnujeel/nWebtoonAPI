@@ -1,6 +1,7 @@
 package com.example.nWebtoonAPI.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import com.example.nWebtoonAPI.dto.EpisodeContentDto;
 import com.example.nWebtoonAPI.dto.EpisodeDto;
 import com.example.nWebtoonAPI.dto.EpisodeEditDto;
 import com.example.nWebtoonAPI.dto.EpisodeGradeDto;
+import com.example.nWebtoonAPI.dto.EpisodeListDto;
 import com.example.nWebtoonAPI.service.EpisodeService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,13 +32,19 @@ public class EpisodeController {
 
 	private final EpisodeService episodeService;
 
-	@PostMapping("/{cartoonId}/episode")
+	@GetMapping("/{cartoonId}/episodes")
+	public ResponseEntity<List<EpisodeListDto>> getEpisodeList(@PathVariable Long cartoonId) {
+
+	}
+
+	@PostMapping("/{cartoonId}/episodes")
 	public ResponseEntity<EpisodeDto> createEpisode(@PathVariable Long cartoonId, @RequestPart EpisodeDto episodeDto,
 		@RequestPart MultipartFile thumbImg, @RequestPart MultipartFile contentImg) throws IOException {
 
 		EpisodeDto episode = episodeService.createEpisode(cartoonId, episodeDto, thumbImg, contentImg);
 		return new ResponseEntity<>(episode, HttpStatus.OK);
 	}
+
 
 	@GetMapping("/{cartoonId}/episodes/{episodeId}")
 	public ResponseEntity<EpisodeContentDto> getEpisode(@PathVariable Long cartoonId, @PathVariable Long episodeId) {
@@ -65,10 +73,10 @@ public class EpisodeController {
 	}
 
 	@PostMapping("/{cartoonId}/episodes/{episodeId}/grade")
-	public ResponseEntity<EpisodeGradeDto> giveGrade(@PathVariable("episodeId") Long episodeId,
+	public ResponseEntity<EpisodeGradeDto> giveGrade(@PathVariable Long cartoonId, @PathVariable Long episodeId,
 		@RequestBody EpisodeGradeDto episodeGradeDto) {
 
-		EpisodeGradeDto episodeGrade = episodeService.giveGrade(episodeId, episodeGradeDto);
+		EpisodeGradeDto episodeGrade = episodeService.giveGrade(cartoonId, episodeId, episodeGradeDto);
 		return new ResponseEntity<>(episodeGrade, HttpStatus.OK);
 	}
 }
