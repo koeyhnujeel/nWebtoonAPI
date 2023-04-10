@@ -2,6 +2,7 @@ package com.example.nWebtoonAPI.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ import com.example.nWebtoonAPI.dto.EpisodeContentDto;
 import com.example.nWebtoonAPI.dto.EpisodeDto;
 import com.example.nWebtoonAPI.dto.EpisodeEditDto;
 import com.example.nWebtoonAPI.dto.EpisodeGradeDto;
+import com.example.nWebtoonAPI.dto.EpisodeListDto;
 import com.example.nWebtoonAPI.repository.CartoonRepository;
 import com.example.nWebtoonAPI.repository.EpisodeRepository;
 
@@ -68,6 +70,11 @@ public class EpisodeServiceImpl implements EpisodeService {
 		cartoonRepository.save(cartoon);
 
 		return episodeDto;
+	}
+
+	@Override
+	public List<EpisodeListDto> getEpisodeList(Long cartoonId) {
+		return null;
 	}
 
 	@Override
@@ -148,7 +155,7 @@ public class EpisodeServiceImpl implements EpisodeService {
 	}
 
 	@Override
-	public EpisodeGradeDto giveGrade(Long episodeId, EpisodeGradeDto episodeGradeDto) {
+	public EpisodeGradeDto giveGrade(Long cartoonId, Long episodeId, EpisodeGradeDto episodeGradeDto) {
 		Optional<Episode> res = episodeRepository.findById(episodeId);
 		if (res.isEmpty()) {
 			throw new IllegalArgumentException("존재하지 않는 회차입니다,");
@@ -167,7 +174,23 @@ public class EpisodeServiceImpl implements EpisodeService {
 		Episode savedEpisode = episodeRepository.save(episode);
 		BeanUtils.copyProperties(savedEpisode, episodeGradeDto);
 
+		giveCartoonGrade(cartoonId);
+
 		return episodeGradeDto;
+	}
+
+	private void giveCartoonGrade(Long cartoonId) {
+		List<Episode> episodeList = episodeRepository.findByCartoon_CartoonId(cartoonId);
+		int allEpisodeCount = episodeList.size();
+		double temp = 0;
+		for (Episode e : episodeList) {
+			temp += e.getGrade();
+		}
+		double cartoonAvgGrade = Math.round((temp / allEpisodeCount) * 100) / 100.0;
+		Optional<Cartoon> cRes = cartoonRepository.findById(cartoonId);
+		Cartoon cartoon = cRes.get();
+		cartoon.setGrade(cartoonAvgGrade);
+		cartoonRepository.save(cartoon);
 	}
 
 	private static void createFolder(String dirPath) {
