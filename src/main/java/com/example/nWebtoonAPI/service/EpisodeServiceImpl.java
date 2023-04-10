@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -123,7 +124,26 @@ public class EpisodeServiceImpl implements EpisodeService {
 		return episodeEditDto;
 	}
 
+	@Override
+	public void deleteEpisode(Long cartoonId, Long episodeId) throws IOException{
+		Optional<Episode> res = episodeRepository.findById(episodeId);
+		if (res.isEmpty()) {
+			throw new IllegalArgumentException("존재하지 않는 회차입니다.");
+		}
+		String path = ImgDir.imgPath + cartoonId + "/" + "episodes/" + episodeId;
+		File folder = new File(path);
+		FileUtils.cleanDirectory(folder);
+		folder.delete();
+		episodeRepository.deleteById(cartoonId);
 
+		Optional<Cartoon> resCartoon = cartoonRepository.findById(cartoonId);
+		if (resCartoon.isEmpty()) {
+			throw new IllegalArgumentException("존재하지 않는 웹툰입니다.");
+		}
+		Cartoon cartoon = resCartoon.get();
+		cartoon.setTotalEpisode(cartoon.getTotalEpisode() - 1);
+		cartoonRepository.save(cartoon);
+	}
 
 	private static void createFolder(String dirPath) {
 		File Folder = new File(dirPath);

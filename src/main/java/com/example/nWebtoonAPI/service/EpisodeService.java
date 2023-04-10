@@ -11,10 +11,12 @@ import com.example.nWebtoonAPI.dto.EpisodeEditDto;
 
 public interface EpisodeService {
 
-	EpisodeDto createEpisode(Long cartoonId, EpisodeDto episodeDto, MultipartFile thumbImg, MultipartFile contentImg) throws IOException;
+	EpisodeDto createEpisode(Long cartoonId, EpisodeDto episodeDto, MultipartFile thumbImg,
+		MultipartFile contentImg) throws IOException;
 
 	EpisodeContentDto getEpisode(Long cartoonId, Long episodeId);
 
-	EpisodeEditDto updateEpisode(Long cartoonId ,Long episodeId, EpisodeEditDto episodeEditDto, MultipartFile thumbImg, MultipartFile contentImg) throws IOException;
-
+	EpisodeEditDto updateEpisode(Long cartoonId, Long episodeId, EpisodeEditDto episodeEditDto, MultipartFile thumbImg,
+		MultipartFile contentImg) throws IOException;
+	void deleteEpisode(Long cartoonId, Long episodeId) throws IOException;
 }
