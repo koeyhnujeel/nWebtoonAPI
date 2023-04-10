@@ -33,6 +33,12 @@ public class CartoonController {
 
 	private final CartoonService cartoonService;
 
+	@GetMapping("")
+	public ResponseEntity<List<CartoonListDto>> getCartoons() {
+		List<CartoonListDto> cartoonListDto = cartoonService.getCartoons();
+		return new ResponseEntity<>(cartoonListDto, HttpStatus.OK);
+	}
+
 	@PostMapping("")
 	public ResponseEntity<CartoonDto> createCartoon(@RequestBody CartoonDto cartoonDto) {
 		CartoonDto savedCartoon = cartoonService.createCartoon(cartoonDto);
@@ -47,11 +53,6 @@ public class CartoonController {
 		return new ResponseEntity<>(cartoonImgDto, HttpStatus.OK);
 	}
 
-	@GetMapping("/list")
-	public ResponseEntity<List<CartoonListDto>> getCartoons() {
-		List<CartoonListDto> cartoonListDto = cartoonService.getCartoons();
-		return new ResponseEntity<>(cartoonListDto, HttpStatus.OK);
-	}
 
 	@PutMapping("/{cartoonId}")
 	public ResponseEntity<CartoonEditDto> updateCartoon(@PathVariable Long cartoonId,
