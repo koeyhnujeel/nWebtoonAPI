@@ -2,6 +2,7 @@ package com.example.nWebtoonAPI.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -74,7 +75,17 @@ public class EpisodeServiceImpl implements EpisodeService {
 
 	@Override
 	public List<EpisodeListDto> getEpisodeList(Long cartoonId) {
-		return null;
+		List<Episode> episodeList = episodeRepository.findByCartoon_CartoonId(cartoonId);
+		List<EpisodeListDto> eList = new ArrayList<>();
+		if (!episodeList.isEmpty()) {
+			for (Episode episode : episodeList) {
+				EpisodeListDto episodeListDto = new EpisodeListDto();
+				BeanUtils.copyProperties(episode, episodeListDto);
+				episodeListDto.setCartoonId(cartoonId);
+				eList.add(episodeListDto);
+			}
+		}
+		return eList;
 	}
 
 	@Override

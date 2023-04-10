@@ -34,7 +34,8 @@ public class EpisodeController {
 
 	@GetMapping("/{cartoonId}/episodes")
 	public ResponseEntity<List<EpisodeListDto>> getEpisodeList(@PathVariable Long cartoonId) {
-
+		List<EpisodeListDto> episodeList = episodeService.getEpisodeList(cartoonId);
+		return new ResponseEntity<>(episodeList, HttpStatus.OK);
 	}
 
 	@PostMapping("/{cartoonId}/episodes")
