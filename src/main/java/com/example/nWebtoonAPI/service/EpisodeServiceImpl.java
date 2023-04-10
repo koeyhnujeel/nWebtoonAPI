@@ -14,6 +14,7 @@ import com.example.nWebtoonAPI.domain.Cartoon;
 import com.example.nWebtoonAPI.domain.Episode;
 import com.example.nWebtoonAPI.dto.EpisodeContentDto;
 import com.example.nWebtoonAPI.dto.EpisodeDto;
+import com.example.nWebtoonAPI.dto.EpisodeEditDto;
 import com.example.nWebtoonAPI.repository.CartoonRepository;
 import com.example.nWebtoonAPI.repository.EpisodeRepository;
 
@@ -83,6 +84,46 @@ public class EpisodeServiceImpl implements EpisodeService {
 
 		return episodeContentDto;
 	}
+
+	@Override
+	public EpisodeEditDto updateEpisode(Long cartoonId, Long episodeId, EpisodeEditDto episodeEditDto,
+		MultipartFile thumbImg, MultipartFile contentImg) throws IOException {
+
+		Optional<Episode> res = episodeRepository.findById(episodeId);
+		if (res.isEmpty()) {
+			throw new IllegalArgumentException("존재하지 않는 회차입니다.");
+		}
+		Episode episode = res.get();
+		episode.setTitle(episodeEditDto.getTitle());
+
+		if (thumbImg != null) {
+			String thumbImgUrl = episode.getThumbImgUrl();
+			File file = new File(thumbImgUrl);
+			file.delete();
+
+			String thumbnailDirPath = ImgDir.imgPath + cartoonId + "/" + "episodes/" + episodeId + "/" + "thumbnail/";
+			String resThumbFileName = saveImgFile(thumbImg, thumbnailDirPath);
+			episode.setThumbImgName(resThumbFileName);
+			episode.setThumbImgUrl(thumbnailDirPath + resThumbFileName);
+		}
+
+		if (contentImg != null) {
+			String contentImgUrl = episode.getContentImgUrl();
+			File file = new File(contentImgUrl);
+			file.delete();
+
+			String contentDirPath = ImgDir.imgPath + cartoonId + "/" + "episodes/" + episodeId + "/" + "content/";
+			String resContentFileName = saveImgFile(contentImg, contentDirPath);
+			episode.setContentImgName(resContentFileName);
+			episode.setContentImgUrl(contentDirPath + resContentFileName);
+		}
+
+		Episode savedEpisode = episodeRepository.save(episode);
+		BeanUtils.copyProperties(savedEpisode, episodeEditDto);
+		return episodeEditDto;
+	}
+
+
 
 	private static void createFolder(String dirPath) {
 		File Folder = new File(dirPath);

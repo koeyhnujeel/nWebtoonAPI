@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.nWebtoonAPI.dto.EpisodeContentDto;
 import com.example.nWebtoonAPI.dto.EpisodeDto;
+import com.example.nWebtoonAPI.dto.EpisodeEditDto;
 import com.example.nWebtoonAPI.service.EpisodeService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,10 +35,20 @@ public class EpisodeController {
 		return new ResponseEntity<>(episode, HttpStatus.OK);
 	}
 
-	@GetMapping("/{cartoonId}/episode/{episodeId}")
+	@GetMapping("/{cartoonId}/episodes/{episodeId}")
 	public ResponseEntity<EpisodeContentDto> getEpisode(@PathVariable Long cartoonId, @PathVariable Long episodeId) {
 
 		EpisodeContentDto episodeContentDto = episodeService.getEpisode(cartoonId, episodeId);
 		return new ResponseEntity<>(episodeContentDto, HttpStatus.OK);
+	}
+
+	@PutMapping("/{cartoonId}/episodes/{episodeId}")
+	public ResponseEntity<EpisodeEditDto> updateEpisode(@PathVariable Long cartoonId, @PathVariable Long episodeId,
+		@RequestPart EpisodeEditDto episodeEditDto,
+		@RequestPart(required = false) MultipartFile thumbImg,
+		@RequestPart(required = false) MultipartFile contentImg) throws IOException {
+
+		EpisodeEditDto episodeEdit = episodeService.updateEpisode(cartoonId, episodeId, episodeEditDto, thumbImg, contentImg);
+		return new ResponseEntity<>(episodeEdit, HttpStatus.OK);
 	}
 }
