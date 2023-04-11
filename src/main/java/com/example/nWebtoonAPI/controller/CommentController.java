@@ -22,14 +22,18 @@ public class CommentController {
 	private final CommentService commentService;
 
 	@PostMapping("/{cartoonId}/episodes/{episodeId}/comments")
-	public ResponseEntity<CommentDto> createComment(@PathVariable("episodeId") Long episodeId, @RequestBody CommentDto commentDto) {
+	public ResponseEntity<CommentDto> createComment(@PathVariable("episodeId") Long episodeId,
+		@RequestBody CommentDto commentDto) {
+
 		CommentDto comment = commentService.createComment(episodeId, commentDto);
 		return new ResponseEntity<>(comment, HttpStatus.OK);
 	}
 
 	@PutMapping("/{cartoonId}/episodes/{episodeId}/comments/{commentId}")
-	public ResponseEntity<CommentDto> updateComment(@PathVariable("episodeId") Long episodeId, @PathVariable("commentId") Long commentId, @RequestBody CommentDto commentDto) {
-		CommentDto comment = commentService.updateComment(episodeId ,commentId, commentDto);
+	public ResponseEntity<CommentDto> updateComment(@PathVariable("episodeId") Long episodeId,
+		@PathVariable("commentId") Long commentId, @RequestBody CommentDto commentDto) {
+
+		CommentDto comment = commentService.updateComment(episodeId, commentId, commentDto);
 		return new ResponseEntity<>(comment, HttpStatus.OK);
 	}
 }
