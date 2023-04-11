@@ -2,6 +2,7 @@ package com.example.nWebtoonAPI.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,5 +36,13 @@ public class CommentController {
 
 		CommentDto comment = commentService.updateComment(episodeId, commentId, commentDto);
 		return new ResponseEntity<>(comment, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{cartoonId}/episodes/{episodeId}/comments/{commentId}")
+	public ResponseEntity<Void> deleteComment(@PathVariable("episodeId") Long episodeId,
+		@PathVariable("commentId") Long commentId) {
+
+		commentService.deleteComment(episodeId, commentId);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

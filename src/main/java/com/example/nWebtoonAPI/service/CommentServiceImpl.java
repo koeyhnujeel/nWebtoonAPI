@@ -1,5 +1,6 @@
 package com.example.nWebtoonAPI.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -52,5 +53,26 @@ public class CommentServiceImpl implements CommentService {
 		BeanUtils.copyProperties(savedComment, commentDto);
 		commentDto.setEpisodeId(episodeId);
 		return commentDto;
+	}
+
+	@Override
+	public void deleteComment(Long episodeId, Long commentId) {
+		Optional<Comment> res = commentRepository.findById(commentId);
+		if (res.isEmpty()) {
+			throw new IllegalArgumentException("존재하지 않는 댓글입니다.");
+		}
+		commentRepository.deleteById(commentId);
+
+		Optional<Episode> eRes = episodeRepository.findById(episodeId);
+		Episode episode = eRes.get();
+		List<Comment> comments = episode.getComments();
+
+		for (int i = 0; i < comments.size(); i++) {
+			if (comments.get(i).getCommentId() == commentId) {
+				comments.remove(i);
+				episodeRepository.save(episode);
+				break;
+			}
+		}
 	}
 }
