@@ -1,0 +1,8 @@
+package com.example.nWebtoonAPI.service;
+
+import com.example.nWebtoonAPI.dto.CommentDto;
+
+public interface CommentService {
+
+	CommentDto createComment(Long episodeId, CommentDto commentDto);
+}

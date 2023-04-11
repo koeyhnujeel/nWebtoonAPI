@@ -102,7 +102,6 @@ public class EpisodeServiceImpl implements EpisodeService {
 		EpisodeContentDto episodeContentDto = new EpisodeContentDto();
 		Episode episode = res.get();
 		BeanUtils.copyProperties(episode, episodeContentDto);
-
 		return episodeContentDto;
 	}
 
