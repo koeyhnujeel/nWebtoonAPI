@@ -38,4 +38,19 @@ public class CommentServiceImpl implements CommentService {
 		commentDto.setEpisodeId(episodeId);
 		return commentDto;
 	}
+
+	@Override
+	public CommentDto updateComment(Long episodeId, Long commentId, CommentDto commentDto) {
+		Optional<Comment> res = commentRepository.findById(commentId);
+		if (res.isEmpty()) {
+			throw new IllegalArgumentException("존재하지 않는 댓글입니다.");
+		}
+
+		Comment comment = res.get();
+		comment.setCommentContent(commentDto.getCommentContent());
+		Comment savedComment = commentRepository.save(comment);
+		BeanUtils.copyProperties(savedComment, commentDto);
+		commentDto.setEpisodeId(episodeId);
+		return commentDto;
+	}
 }
