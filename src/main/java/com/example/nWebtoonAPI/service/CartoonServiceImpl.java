@@ -76,17 +76,26 @@ public class CartoonServiceImpl implements CartoonService {
 	}
 
 	@Override
-	public List<CartoonListDto> getCartoons() {
+	public List<CartoonListDto> getCartoons(String tab) {
 		List<Cartoon> cartoons = cartoonRepository.findAll();
 		if (cartoons.isEmpty()) {
 			throw new EntityNotFoundException("등록된 웹툰이 없습니다");
 		}
-
+		
 		List<CartoonListDto> cartoonListDtos = new ArrayList<>();
-		for (Cartoon cartoon : cartoons) {
-			CartoonListDto cartoonListDto = new CartoonListDto();
-			BeanUtils.copyProperties(cartoon, cartoonListDto);
-			cartoonListDtos.add(cartoonListDto);
+		if (tab != null) {
+			List<Cartoon> byDay = cartoonRepository.findByDay(tab);
+			for (Cartoon cartoon : byDay) {
+				CartoonListDto cartoonListDto = new CartoonListDto();
+				BeanUtils.copyProperties(cartoon, cartoonListDto);
+				cartoonListDtos.add(cartoonListDto);
+			}
+		} else {
+			for (Cartoon cartoon : cartoons) {
+				CartoonListDto cartoonListDto = new CartoonListDto();
+				BeanUtils.copyProperties(cartoon, cartoonListDto);
+				cartoonListDtos.add(cartoonListDto);
+			}
 		}
 		return cartoonListDtos;
 	}

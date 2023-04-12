@@ -13,4 +13,5 @@ public class CartoonListDto {
 	private String mainImgName;
 	private String mainImgUrl;
 	private int views;
+	private String day;
 }
