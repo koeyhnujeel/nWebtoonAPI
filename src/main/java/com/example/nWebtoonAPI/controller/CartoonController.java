@@ -35,8 +35,9 @@ public class CartoonController {
 	private final CartoonService cartoonService;
 
 	@GetMapping("")
-	public ResponseEntity<List<CartoonListDto>> getCartoons(@RequestParam(required = false) String tab) {
-		List<CartoonListDto> cartoonListDto = cartoonService.getCartoons(tab);
+	public ResponseEntity<List<CartoonListDto>> getCartoons(@RequestParam(required = false) String tab,
+		@RequestParam(required = false) String sort) {
+		List<CartoonListDto> cartoonListDto = cartoonService.getCartoons(tab, sort);
 		return new ResponseEntity<>(cartoonListDto, HttpStatus.OK);
 	}
 

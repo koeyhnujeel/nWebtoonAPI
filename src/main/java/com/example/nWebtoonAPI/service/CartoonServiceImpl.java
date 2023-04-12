@@ -10,6 +10,7 @@ import javax.persistence.EntityNotFoundException;
 
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +29,51 @@ import lombok.RequiredArgsConstructor;
 public class CartoonServiceImpl implements CartoonService {
 
 	private final CartoonRepository cartoonRepository;
+
+	@Override
+	public List<CartoonListDto> getCartoons(String tab, String sort) {
+		List<Cartoon> cartoons = cartoonRepository.findAll();
+		if (cartoons.isEmpty()) {
+			throw new EntityNotFoundException("등록된 웹툰이 없습니다");
+		}
+
+		List<CartoonListDto> cartoonListDtos = new ArrayList<>();
+		if (tab != null) {
+			if (sort == null) {
+				List<Cartoon> byDay = cartoonRepository.findByDay(tab);
+				addDto(cartoonListDtos, byDay);
+			} else {
+				if (sort.equals("views")) {
+					List<Cartoon> viewsDesc = cartoonRepository.findByDayOrderByViewsDesc(tab);
+					addDto(cartoonListDtos, viewsDesc);
+				} else if (sort.equals("grade")) {
+					List<Cartoon> gradeDesc = cartoonRepository.findByDayOrderByGradeDesc(tab);
+					addDto(cartoonListDtos, gradeDesc);
+				}
+			}
+		} else {
+			if (sort == null) {
+				addDto(cartoonListDtos, cartoons);
+			} else {
+				if (sort.equals("views")) {
+					List<Cartoon> viewsDesc = cartoonRepository.findAll(Sort.by(Sort.Direction.DESC, "views"));
+					addDto(cartoonListDtos, viewsDesc);
+				} else if (sort.equals("grade")) {
+					List<Cartoon> gradeDesc = cartoonRepository.findAll(Sort.by(Sort.Direction.DESC, "grade"));
+					addDto(cartoonListDtos, gradeDesc);
+				}
+			}
+		}
+		return cartoonListDtos;
+	}
+
+	private void addDto(List<CartoonListDto> cartoonListDtos, List<Cartoon> list) {
+		for (Cartoon cartoon : list) {
+			CartoonListDto cartoonListDto = new CartoonListDto();
+			BeanUtils.copyProperties(cartoon, cartoonListDto);
+			cartoonListDtos.add(cartoonListDto);
+		}
+	}
 
 	@Override
 	public CartoonDto createCartoon(CartoonDto cartoonDto) {
@@ -74,31 +120,6 @@ public class CartoonServiceImpl implements CartoonService {
 		BeanUtils.copyProperties(savedCartoon, cartoonImgDto);
 
 		return cartoonImgDto;
-	}
-
-	@Override
-	public List<CartoonListDto> getCartoons(String tab) {
-		List<Cartoon> cartoons = cartoonRepository.findAll();
-		if (cartoons.isEmpty()) {
-			throw new EntityNotFoundException("등록된 웹툰이 없습니다");
-		}
-
-		List<CartoonListDto> cartoonListDtos = new ArrayList<>();
-		if (tab != null) {
-			List<Cartoon> byDay = cartoonRepository.findByDay(tab);
-			for (Cartoon cartoon : byDay) {
-				CartoonListDto cartoonListDto = new CartoonListDto();
-				BeanUtils.copyProperties(cartoon, cartoonListDto);
-				cartoonListDtos.add(cartoonListDto);
-			}
-		} else {
-			for (Cartoon cartoon : cartoons) {
-				CartoonListDto cartoonListDto = new CartoonListDto();
-				BeanUtils.copyProperties(cartoon, cartoonListDto);
-				cartoonListDtos.add(cartoonListDto);
-			}
-		}
-		return cartoonListDtos;
 	}
 
 	@Override
