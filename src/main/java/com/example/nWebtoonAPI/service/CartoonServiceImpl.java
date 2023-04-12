@@ -56,10 +56,10 @@ public class CartoonServiceImpl implements CartoonService {
 			throw new IllegalArgumentException("파일이 존재하지 않습니다.");
 		}
 
-		String mainFilePath = ImgDir.imgPath + cartoonId + "/" + "main/";
+		String mainFilePath = ImgDir.IMG_PATH + cartoonId + "/" + "main/";
 		String resMainFileName = saveImgFile(mainImg, mainFilePath);
 
-		String subFilePath = ImgDir.imgPath + cartoonId + "/" + "sub/";
+		String subFilePath = ImgDir.IMG_PATH + cartoonId + "/" + "sub/";
 		String resSubFileName = saveImgFile(subImg, subFilePath);
 
 		Cartoon cartoon = res.get();
@@ -108,7 +108,7 @@ public class CartoonServiceImpl implements CartoonService {
 			File file = new File(updateCartoon.getMainImgUrl());
 			file.delete();
 
-			String mainFilePath = ImgDir.imgPath + cartoonId + "/" + "main/";
+			String mainFilePath = ImgDir.IMG_PATH + cartoonId + "/" + "main/";
 			String resMainFileName = saveImgFile(mainImg, mainFilePath);
 
 			updateCartoon.setMainImgName(resMainFileName);
@@ -119,7 +119,7 @@ public class CartoonServiceImpl implements CartoonService {
 			File file = new File(updateCartoon.getSubImgUrl());
 			file.delete();
 
-			String subFilePath = ImgDir.imgPath + cartoonId + "/" + "sub/";
+			String subFilePath = ImgDir.IMG_PATH + cartoonId + "/" + "sub/";
 			String resSubFileName = saveImgFile(subImg, subFilePath);
 
 			updateCartoon.setSubImgName(resSubFileName);
@@ -139,7 +139,7 @@ public class CartoonServiceImpl implements CartoonService {
 			throw new IllegalArgumentException("존재하지 않는 웹툰입니다.");
 		}
 
-		String path = ImgDir.imgPath + cartoonId;
+		String path = ImgDir.IMG_PATH + cartoonId;
 		File folder = new File(path);
 		if (folder.exists()) {
 			FileUtils.cleanDirectory(folder);

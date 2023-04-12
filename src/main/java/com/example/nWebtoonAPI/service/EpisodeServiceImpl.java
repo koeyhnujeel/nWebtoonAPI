@@ -50,10 +50,10 @@ public class EpisodeServiceImpl implements EpisodeService {
 		Episode savedEpisode = episodeRepository.save(episode);
 
 		Long episodeId = savedEpisode.getEpisodeId();
-		String contentDirPath = ImgDir.imgPath + cartoonId + "/" + "episodes/" + episodeId + "/" + "content/";
+		String contentDirPath = ImgDir.IMG_PATH + cartoonId + "/" + "episodes/" + episodeId + "/" + "content/";
 		createFolder(contentDirPath);
 
-		String thumbnailDirPath = ImgDir.imgPath + cartoonId + "/" + "episodes/" + episodeId + "/" + "thumbnail/";
+		String thumbnailDirPath = ImgDir.IMG_PATH + cartoonId + "/" + "episodes/" + episodeId + "/" + "thumbnail/";
 		createFolder(thumbnailDirPath);
 
 		String resContentFileName = saveImgFile(contentImg, contentDirPath);
@@ -121,7 +121,7 @@ public class EpisodeServiceImpl implements EpisodeService {
 			File file = new File(thumbImgUrl);
 			file.delete();
 
-			String thumbnailDirPath = ImgDir.imgPath + cartoonId + "/" + "episodes/" + episodeId + "/" + "thumbnail/";
+			String thumbnailDirPath = ImgDir.IMG_PATH + cartoonId + "/" + "episodes/" + episodeId + "/" + "thumbnail/";
 			String resThumbFileName = saveImgFile(thumbImg, thumbnailDirPath);
 			episode.setThumbImgName(resThumbFileName);
 			episode.setThumbImgUrl(thumbnailDirPath + resThumbFileName);
@@ -132,7 +132,7 @@ public class EpisodeServiceImpl implements EpisodeService {
 			File file = new File(contentImgUrl);
 			file.delete();
 
-			String contentDirPath = ImgDir.imgPath + cartoonId + "/" + "episodes/" + episodeId + "/" + "content/";
+			String contentDirPath = ImgDir.IMG_PATH + cartoonId + "/" + "episodes/" + episodeId + "/" + "content/";
 			String resContentFileName = saveImgFile(contentImg, contentDirPath);
 			episode.setContentImgName(resContentFileName);
 			episode.setContentImgUrl(contentDirPath + resContentFileName);
@@ -149,7 +149,7 @@ public class EpisodeServiceImpl implements EpisodeService {
 		if (res.isEmpty()) {
 			throw new IllegalArgumentException("존재하지 않는 회차입니다.");
 		}
-		String path = ImgDir.imgPath + cartoonId + "/" + "episodes/" + episodeId;
+		String path = ImgDir.IMG_PATH + cartoonId + "/" + "episodes/" + episodeId;
 		File folder = new File(path);
 		FileUtils.cleanDirectory(folder);
 		folder.delete();

@@ -1,5 +1,5 @@
 package com.example.nWebtoonAPI.constant;
 
 public class ImgDir {
-	public static final String imgPath = "/Users/zunza/nWebtoonAPI/images/cartoons/";
+	public static final String IMG_PATH = "/Users/zunza/nWebtoonAPI/images/cartoons/";
 }
