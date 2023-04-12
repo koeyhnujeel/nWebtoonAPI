@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -57,10 +56,12 @@ public class CartoonServiceImpl implements CartoonService {
 		}
 
 		String mainFilePath = ImgDir.IMG_PATH + cartoonId + "/" + "main/";
-		String resMainFileName = saveImgFile(mainImg, mainFilePath);
+		ImgDir.createFolder(mainFilePath);
+		String resMainFileName = ImgDir.saveImgFile(mainImg, mainFilePath);
 
 		String subFilePath = ImgDir.IMG_PATH + cartoonId + "/" + "sub/";
-		String resSubFileName = saveImgFile(subImg, subFilePath);
+		ImgDir.createFolder(subFilePath);
+		String resSubFileName = ImgDir.saveImgFile(subImg, subFilePath);
 
 		Cartoon cartoon = res.get();
 		cartoon.setMainImgName(resMainFileName);
@@ -81,7 +82,7 @@ public class CartoonServiceImpl implements CartoonService {
 		if (cartoons.isEmpty()) {
 			throw new EntityNotFoundException("등록된 웹툰이 없습니다");
 		}
-		
+
 		List<CartoonListDto> cartoonListDtos = new ArrayList<>();
 		if (tab != null) {
 			List<Cartoon> byDay = cartoonRepository.findByDay(tab);
@@ -118,7 +119,7 @@ public class CartoonServiceImpl implements CartoonService {
 			file.delete();
 
 			String mainFilePath = ImgDir.IMG_PATH + cartoonId + "/" + "main/";
-			String resMainFileName = saveImgFile(mainImg, mainFilePath);
+			String resMainFileName = ImgDir.saveImgFile(mainImg, mainFilePath);
 
 			updateCartoon.setMainImgName(resMainFileName);
 			updateCartoon.setMainImgUrl(mainFilePath + resMainFileName);
@@ -129,7 +130,7 @@ public class CartoonServiceImpl implements CartoonService {
 			file.delete();
 
 			String subFilePath = ImgDir.IMG_PATH + cartoonId + "/" + "sub/";
-			String resSubFileName = saveImgFile(subImg, subFilePath);
+			String resSubFileName = ImgDir.saveImgFile(subImg, subFilePath);
 
 			updateCartoon.setSubImgName(resSubFileName);
 			updateCartoon.setSubImgUrl(subFilePath + resSubFileName);
@@ -155,15 +156,5 @@ public class CartoonServiceImpl implements CartoonService {
 			folder.delete();
 		}
 		cartoonRepository.deleteById(cartoonId);
-	}
-
-	private static String saveImgFile(MultipartFile img, String filePath) throws IOException {
-
-		String fileName = img.getOriginalFilename();
-		UUID uuid = UUID.randomUUID();
-		String resFileName = uuid + "_" + fileName;
-		img.transferTo(new File(filePath + resFileName));
-
-		return resFileName;
 	}
 }

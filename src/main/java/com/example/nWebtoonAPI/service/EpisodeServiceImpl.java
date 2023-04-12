@@ -32,46 +32,6 @@ public class EpisodeServiceImpl implements EpisodeService {
 	private final CartoonRepository cartoonRepository;
 	private final EpisodeRepository episodeRepository;
 
-	@Override
-	public EpisodeDto createEpisode(Long cartoonId, EpisodeDto episodeDto, MultipartFile thumbImg,
-		MultipartFile contentImg) throws IOException {
-
-		Optional<Cartoon> res = cartoonRepository.findById(cartoonId);
-		if (res.isEmpty()) {
-			throw new IllegalArgumentException("존재하지 않는 웹툰입니다.");
-		}
-
-		Episode episode = new Episode();
-		episode.setTitle(episodeDto.getTitle());
-		episode.setGrade(0);
-		episode.setTotalGrade(0);
-		episode.setCount(0);
-		episode.setCartoon(res.get());
-		Episode savedEpisode = episodeRepository.save(episode);
-
-		Long episodeId = savedEpisode.getEpisodeId();
-		String contentDirPath = ImgDir.IMG_PATH + cartoonId + "/" + "episodes/" + episodeId + "/" + "content/";
-		createFolder(contentDirPath);
-
-		String thumbnailDirPath = ImgDir.IMG_PATH + cartoonId + "/" + "episodes/" + episodeId + "/" + "thumbnail/";
-		createFolder(thumbnailDirPath);
-
-		String resContentFileName = saveImgFile(contentImg, contentDirPath);
-		String resThumbFileName = saveImgFile(thumbImg, thumbnailDirPath);
-
-		savedEpisode.setThumbImgName(resThumbFileName);
-		savedEpisode.setThumbImgUrl(thumbnailDirPath + resThumbFileName);
-		savedEpisode.setContentImgName(resContentFileName);
-		savedEpisode.setContentImgUrl(contentDirPath + resContentFileName);
-		Episode resEpisode = episodeRepository.save(savedEpisode);
-		BeanUtils.copyProperties(resEpisode, episodeDto);
-
-		Cartoon cartoon = res.get();
-		cartoon.setTotalEpisode(cartoon.getTotalEpisode() + 1);
-		cartoonRepository.save(cartoon);
-
-		return episodeDto;
-	}
 
 	@Override
 	public List<EpisodeListDto> getEpisodeList(Long cartoonId) {
@@ -106,6 +66,48 @@ public class EpisodeServiceImpl implements EpisodeService {
 	}
 
 	@Override
+	public EpisodeDto createEpisode(Long cartoonId, EpisodeDto episodeDto, MultipartFile thumbImg,
+		MultipartFile contentImg) throws IOException {
+
+		Optional<Cartoon> res = cartoonRepository.findById(cartoonId);
+		if (res.isEmpty()) {
+			throw new IllegalArgumentException("존재하지 않는 웹툰입니다.");
+		}
+
+		Episode episode = new Episode();
+		episode.setTitle(episodeDto.getTitle());
+		episode.setGrade(0);
+		episode.setTotalGrade(0);
+		episode.setCount(0);
+		episode.setCartoon(res.get());
+		Episode savedEpisode = episodeRepository.save(episode);
+
+		Long episodeId = savedEpisode.getEpisodeId();
+		String contentDirPath = ImgDir.IMG_PATH + cartoonId + "/" + "episodes/" + episodeId + "/" + "content/";
+		ImgDir.createFolder(contentDirPath);
+
+		String thumbnailDirPath = ImgDir.IMG_PATH + cartoonId + "/" + "episodes/" + episodeId + "/" + "thumbnail/";
+		ImgDir.createFolder(thumbnailDirPath);
+
+		String resContentFileName = ImgDir.saveImgFile(contentImg, contentDirPath);
+		String resThumbFileName = ImgDir.saveImgFile(thumbImg, thumbnailDirPath);
+
+
+		savedEpisode.setThumbImgName(resThumbFileName);
+		savedEpisode.setThumbImgUrl(thumbnailDirPath + resThumbFileName);
+		savedEpisode.setContentImgName(resContentFileName);
+		savedEpisode.setContentImgUrl(contentDirPath + resContentFileName);
+		Episode resEpisode = episodeRepository.save(savedEpisode);
+		BeanUtils.copyProperties(resEpisode, episodeDto);
+
+		Cartoon cartoon = res.get();
+		cartoon.setTotalEpisode(cartoon.getTotalEpisode() + 1);
+		cartoonRepository.save(cartoon);
+
+		return episodeDto;
+	}
+
+	@Override
 	public EpisodeEditDto updateEpisode(Long cartoonId, Long episodeId, EpisodeEditDto episodeEditDto,
 		MultipartFile thumbImg, MultipartFile contentImg) throws IOException {
 
@@ -122,7 +124,7 @@ public class EpisodeServiceImpl implements EpisodeService {
 			file.delete();
 
 			String thumbnailDirPath = ImgDir.IMG_PATH + cartoonId + "/" + "episodes/" + episodeId + "/" + "thumbnail/";
-			String resThumbFileName = saveImgFile(thumbImg, thumbnailDirPath);
+			String resThumbFileName = ImgDir.saveImgFile(thumbImg, thumbnailDirPath);
 			episode.setThumbImgName(resThumbFileName);
 			episode.setThumbImgUrl(thumbnailDirPath + resThumbFileName);
 		}
@@ -133,7 +135,7 @@ public class EpisodeServiceImpl implements EpisodeService {
 			file.delete();
 
 			String contentDirPath = ImgDir.IMG_PATH + cartoonId + "/" + "episodes/" + episodeId + "/" + "content/";
-			String resContentFileName = saveImgFile(contentImg, contentDirPath);
+			String resContentFileName = ImgDir.saveImgFile(contentImg, contentDirPath);
 			episode.setContentImgName(resContentFileName);
 			episode.setContentImgUrl(contentDirPath + resContentFileName);
 		}
@@ -201,20 +203,5 @@ public class EpisodeServiceImpl implements EpisodeService {
 		Cartoon cartoon = cRes.get();
 		cartoon.setGrade(cartoonAvgGrade);
 		cartoonRepository.save(cartoon);
-	}
-
-	private static void createFolder(String dirPath) {
-		File Folder = new File(dirPath);
-		Folder.mkdirs();
-	}
-
-	private static String saveImgFile(MultipartFile img, String filePath) throws IOException {
-
-		String fileName = img.getOriginalFilename();
-		UUID uuid = UUID.randomUUID();
-		String resFileName = uuid + "_" + fileName;
-		img.transferTo(new File(filePath + resFileName));
-
-		return resFileName;
 	}
 }

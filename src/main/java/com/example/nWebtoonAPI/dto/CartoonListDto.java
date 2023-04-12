@@ -14,4 +14,5 @@ public class CartoonListDto {
 	private String mainImgUrl;
 	private int views;
 	private String day;
+	private int totalEpisode;
 }

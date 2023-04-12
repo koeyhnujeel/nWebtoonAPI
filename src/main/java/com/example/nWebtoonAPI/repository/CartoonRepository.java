@@ -10,4 +10,6 @@ import com.example.nWebtoonAPI.domain.Cartoon;
 @Repository
 public interface CartoonRepository extends JpaRepository<Cartoon, Long> {
 	List<Cartoon> findByDay(String tab);
+	// List<Cartoon> findByDayOrderByViewsDesc(String tab, String sort);
+	// List<Cartoon> findByDayOrderByGradeDesc(String tab, String sort);
 }

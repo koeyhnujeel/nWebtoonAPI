@@ -54,7 +54,6 @@ public class CartoonController {
 		return new ResponseEntity<>(cartoonImgDto, HttpStatus.OK);
 	}
 
-
 	@PutMapping("/{cartoonId}")
 	public ResponseEntity<CartoonEditDto> updateCartoon(@PathVariable Long cartoonId,
 		@RequestPart CartoonEditDto cartoonEditDto,
@@ -66,7 +65,7 @@ public class CartoonController {
 	}
 
 	@DeleteMapping("/{cartoonId}")
-	public ResponseEntity<Void> deleteCartoon(@PathVariable Long cartoonId) throws IOException{
+	public ResponseEntity<Void> deleteCartoon(@PathVariable Long cartoonId) throws IOException {
 		cartoonService.deleteCartoon(cartoonId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
