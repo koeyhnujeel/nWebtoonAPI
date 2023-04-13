@@ -8,8 +8,8 @@ n사 웹툰 API를 만들어보자
 - MySQL
 
 ## 웹툰 목록 조회
-1. 요일별 정렬
-2. 요일별 정렬 안에 조회 순, 평점 순 정렬<br>
+1. 전체 및 요일별 정렬
+2. 전제 및 요일별 정렬 안에 조회 순, 평점 순 정렬<br>
 
 <img width="846" alt="image" src="https://user-images.githubusercontent.com/125088568/231784123-36e851fa-87f9-48e4-9b87-40fd7c77116e.png"><br>
 ![image](https://user-images.githubusercontent.com/125088568/231784990-46fcf983-a072-41d2-8594-90c768aed43e.png)<br>
