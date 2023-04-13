@@ -38,20 +38,19 @@ public class EpisodeController {
 		return new ResponseEntity<>(episodeList, HttpStatus.OK);
 	}
 
+	@GetMapping("/{cartoonId}/episodes/{episodeId}")
+	public ResponseEntity<EpisodeContentDto> getEpisode(@PathVariable Long cartoonId, @PathVariable Long episodeId) {
+
+		EpisodeContentDto episodeContentDto = episodeService.getEpisode(cartoonId, episodeId);
+		return new ResponseEntity<>(episodeContentDto, HttpStatus.OK);
+	}
+
 	@PostMapping("/{cartoonId}/episodes")
 	public ResponseEntity<EpisodeDto> createEpisode(@PathVariable Long cartoonId, @RequestPart EpisodeDto episodeDto,
 		@RequestPart MultipartFile thumbImg, @RequestPart MultipartFile contentImg) throws IOException {
 
 		EpisodeDto episode = episodeService.createEpisode(cartoonId, episodeDto, thumbImg, contentImg);
 		return new ResponseEntity<>(episode, HttpStatus.OK);
-	}
-
-
-	@GetMapping("/{cartoonId}/episodes/{episodeId}")
-	public ResponseEntity<EpisodeContentDto> getEpisode(@PathVariable Long cartoonId, @PathVariable Long episodeId) {
-
-		EpisodeContentDto episodeContentDto = episodeService.getEpisode(cartoonId, episodeId);
-		return new ResponseEntity<>(episodeContentDto, HttpStatus.OK);
 	}
 
 	@PutMapping("/{cartoonId}/episodes/{episodeId}")
